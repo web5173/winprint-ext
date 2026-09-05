@@ -96,7 +96,7 @@ impl Drop for PrintTicketBuilder {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "test-utils"))]
 mod tests {
     use super::PrintTicketBuilder;
     use crate::{

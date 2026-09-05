@@ -211,7 +211,7 @@ impl PrintCapabilities {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "test-utils"))]
 mod tests {
     use super::PrintCapabilities;
     use crate::test_utils::null_device;

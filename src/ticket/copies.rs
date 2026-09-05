@@ -31,7 +31,7 @@ impl From<Copies> for PrintTicket {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "test-utils"))]
 mod tests {
     use crate::{
         test_utils::null_device,

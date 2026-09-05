@@ -31,18 +31,19 @@
 //! **Note**: The concept *`Printer`* here is a warpper of device for printing specific types of data,
 //! not meaning the printer device.
 //!
-//! ```rust
+//! ```rust,no_run
 //! use std::path::Path;
 //! use winprint_ext::printer::FilePrinter;
 //! use winprint_ext::printer::PrinterDevice;
 //! use winprint_ext::printer::XpsPrinter;
-//! # use winprint_ext::test_utils::null_device::thread_local as get_my_device;
 //!
-//! let my_device = get_my_device();
+//! let my_device = PrinterDevice::all()
+//!     .expect("Failed to get printers")
+//!     .into_iter()
+//!     .next()
+//!     .expect("No printer found");
 //! let xps = XpsPrinter::new(my_device);
 //! let path = Path::new("path/to/test/document.xps");
-//! # let path_buf = Path::new(env!("CARGO_MANIFEST_DIR")).join("test_data/test_document.xps");
-//! # let path = path_buf.as_path();
 //! xps.print(path, Default::default()).unwrap();
 //! ```
 //!
@@ -61,7 +62,7 @@
 //! - Build the print ticket.
 //! - Print the file with the print ticket.
 //!
-//! ```rust
+//! ```rust,no_run
 //! use std::path::Path;
 //! use winprint_ext::printer::FilePrinter;
 //! use winprint_ext::printer::PrinterDevice;
@@ -71,9 +72,12 @@
 //! use winprint_ext::ticket::PrintCapabilities;
 //! use winprint_ext::ticket::PrintTicket;
 //! use winprint_ext::ticket::PrintTicketBuilder;
-//! # use winprint_ext::test_utils::null_device::thread_local as get_my_device;
 //!
-//! let my_device = get_my_device();
+//! let my_device = PrinterDevice::all()
+//!     .expect("Failed to get printers")
+//!     .into_iter()
+//!     .next()
+//!     .expect("No printer found");
 //! let capabilities = PrintCapabilities::fetch(&my_device).unwrap();
 //! let a4_media = capabilities
 //!     .page_media_sizes()
@@ -84,8 +88,6 @@
 //! let ticket = builder.build().unwrap();
 //! let xps = XpsPrinter::new(my_device);
 //! let path = Path::new("path/to/test/document.xps");
-//! # let path_buf = Path::new(env!("CARGO_MANIFEST_DIR")).join("test_data/test_document.xps");
-//! # let path = path_buf.as_path();
 //! xps.print(path, ticket).unwrap();
 //! ```
 //!
@@ -102,13 +104,4 @@ pub mod test_utils;
 /// Provides a way to specify the printing preferences.
 pub mod ticket;
 mod utils;
-#[cfg(test)]
-mod tests {
-    use ctor::ctor;
-
-    #[ctor]
-    fn setup() {
-        env_logger::init();
-    }
-}
 

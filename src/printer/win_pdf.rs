@@ -113,7 +113,7 @@ impl FilePrinter for WinPdfPrinter {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "test-utils"))]
 mod tests {
     use super::WinPdfPrinter;
     use crate::{printer::FilePrinter, test_utils::null_device};

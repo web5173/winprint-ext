@@ -265,7 +265,7 @@ impl FilePrinter for ImagePrinter {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "test-utils"))]
 mod tests {
     use super::ImagePrinter;
     use crate::{printer::FilePrinter, test_utils::null_device};

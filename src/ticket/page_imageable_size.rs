@@ -82,7 +82,7 @@ impl PageImageableSize {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "test-utils"))]
 mod tests {
     use super::PageImageableSize;
     use crate::{test_utils::null_device, ticket::PrintCapabilities};

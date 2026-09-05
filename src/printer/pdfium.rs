@@ -237,7 +237,7 @@ impl FilePrinter for PdfiumPrinter {
     }
 }
 
-#[cfg(test)]
+#[cfg(all(test, feature = "test-utils"))]
 mod tests {
     use super::PdfiumPrinter;
     use crate::{printer::FilePrinter, test_utils::null_device};
