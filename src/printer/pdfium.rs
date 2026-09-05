@@ -175,6 +175,9 @@ impl FilePrinter for PdfiumPrinter {
                 let dpi_y = get_attr(LOGPIXELSY);
                 let page_std_width = FPDF_GetPageWidth(page);
                 let page_std_height = FPDF_GetPageHeight(page);
+                if page_std_width <= 0.0 || page_std_height <= 0.0 {
+                    return Err(PdfiumPrinterError::EmfCreateFailed(page_index));
+                }
                 let page_width = (page_std_width * dpi_x as f64 / 72.0).round() as i32;
                 let page_height = (page_std_height * dpi_y as f64 / 72.0).round() as i32;
                 let emf = Emf::new(

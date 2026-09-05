@@ -137,6 +137,10 @@ impl PrintTicket {
                 0,
             );
 
+            if buffer_size <= 0 {
+                return Err(ToDevModeError::FailedToCorrectDevMode);
+            }
+
             // Workaround for buggy printer drivers
             // See also: https://chromium.googlesource.com/chromium/src/+/refs/tags/124.0.6347.1/printing/backend/win_helper.cc#586
             buffer_size = buffer_size * 2 + 8192;

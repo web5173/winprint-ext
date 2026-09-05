@@ -104,9 +104,13 @@ impl ImagePrinter {
                     .GetResolution(&mut image_dpi_x, &mut image_dpi_y)
                     .map_err(ImagePrinterError::RenderError)?;
 
+                // 无 DPI 元数据时 GetResolution 可能返回 0，回退为 96 避免除零产生 NaN
+                let dpi_x = if image_dpi_x > 0.0 { image_dpi_x } else { 96.0 };
+                let dpi_y = if image_dpi_y > 0.0 { image_dpi_y } else { 96.0 };
+
                 let natural_page_size = D2D_SIZE_F {
-                    width: (image_width as f64 * 96.0 / image_dpi_x) as f32,
-                    height: (image_height as f64 * 96.0 / image_dpi_y) as f32,
+                    width: (image_width as f64 * 96.0 / dpi_x) as f32,
+                    height: (image_height as f64 * 96.0 / dpi_y) as f32,
                 };
 
                 // Determine if auto-rotation is needed (before scaling)

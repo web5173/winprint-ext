@@ -108,7 +108,7 @@ impl PsfValueContext {
             match self.value_type.local_name.as_str() {
                 "string" => return Ok(PropertyValue::String(self.value)),
                 "integer" => {
-                    return self.value.parse().map(PropertyValue::Integer).map_err(|_| {
+                    return self.value.trim().parse().map(PropertyValue::Integer).map_err(|_| {
                         ParsePrintSchemaError::InvalidPrintSchema {
                             pos: self.pos,
                             reason: "Invalid integer".to_string(),

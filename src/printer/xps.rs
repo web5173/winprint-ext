@@ -56,10 +56,7 @@ impl FilePrinter for XpsPrinter {
     type Error = XpsPrinterError;
     fn print(&self, path: &Path, options: PrintTicket) -> std::result::Result<(), XpsPrinterError> {
         unsafe {
-            let _ = CoInitializeEx(None, COINIT_MULTITHREADED);
-            defer! {
-                CoUninitialize();
-            }
+            let _com = crate::utils::com::ComInitializer::new();
             let event = CreateEventW(None, true, false, None)
                 .map_err(XpsPrinterError::FailedToCreateEvent)?;
             defer! {

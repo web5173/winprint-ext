@@ -2,22 +2,20 @@ use windows::Win32::System::Com::{CoInitializeEx, CoUninitialize, COINIT_MULTITH
 
 #[non_exhaustive]
 pub struct ComInitializer {
-    // Do not use empty struct.
-    // Empty struct is easy to misuse.
-    _dummy: (),
+    initialized: bool,
 }
 impl ComInitializer {
     pub fn new() -> ComInitializer {
-        unsafe {
-            let _ = CoInitializeEx(None, COINIT_MULTITHREADED);
-        }
-        ComInitializer { _dummy: () }
+        let initialized = unsafe { CoInitializeEx(None, COINIT_MULTITHREADED) }.is_ok();
+        ComInitializer { initialized }
     }
 }
 impl Drop for ComInitializer {
     fn drop(&mut self) {
-        unsafe {
-            CoUninitialize();
+        if self.initialized {
+            unsafe {
+                CoUninitialize();
+            }
         }
     }
 }

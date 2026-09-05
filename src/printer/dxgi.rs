@@ -84,6 +84,16 @@ pub struct DxgiPrintContext {
     _com_initializer: ComInitializer,
 }
 
+impl Drop for DxgiPrintContext {
+    fn drop(&mut self) {
+        // Ensure the print control is closed even on early error paths,
+        // otherwise the spooler keeps an unfinished job.
+        unsafe {
+            let _ = self.print_control.Close();
+        }
+    }
+}
+
 impl DxgiPrintContext {
     /// Create a new print context, used for printing via DXGI.
     pub fn new(

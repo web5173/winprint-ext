@@ -5,16 +5,23 @@ pub fn read_com_stream(stream: &IStream) -> Result<Vec<u8>, windows::core::Error
     unsafe {
         stream.Seek(0, STREAM_SEEK_END, Some(&mut size))?;
         stream.Seek(0, STREAM_SEEK_SET, None)?;
-        let mut data = Vec::with_capacity(size as usize);
-        let mut n_read_bytes = 0;
-        stream
-            .Read(
-                data.as_mut_ptr() as *mut _,
-                data.capacity() as u32,
-                Some(&mut n_read_bytes),
-            )
-            .ok()?;
-        data.set_len(n_read_bytes as usize);
+        let mut data = vec![0u8; size as usize];
+        let mut total = 0u64;
+        while total < size {
+            let mut n_read = 0u32;
+            stream
+                .Read(
+                    data.as_mut_ptr().add(total as usize) as *mut _,
+                    (size - total) as u32,
+                    Some(&mut n_read),
+                )
+                .ok()?;
+            if n_read == 0 {
+                break;
+            }
+            total += n_read as u64;
+        }
+        data.truncate(total as usize);
         Ok(data)
     }
 }
@@ -29,16 +36,23 @@ pub fn copy_com_stream_to_vec(
         stream.Seek(0, STREAM_SEEK_END, Some(&mut size))?;
         stream.Seek(0, STREAM_SEEK_SET, None)?;
         dest.clear();
-        dest.reserve(size as usize);
-        let mut n_read_bytes = 0;
-        stream
-            .Read(
-                dest.as_mut_ptr() as *mut _,
-                dest.capacity() as u32,
-                Some(&mut n_read_bytes),
-            )
-            .ok()?;
-        dest.set_len(n_read_bytes as usize);
+        dest.resize(size as usize, 0);
+        let mut total = 0u64;
+        while total < size {
+            let mut n_read = 0u32;
+            stream
+                .Read(
+                    dest.as_mut_ptr().add(total as usize) as *mut _,
+                    (size - total) as u32,
+                    Some(&mut n_read),
+                )
+                .ok()?;
+            if n_read == 0 {
+                break;
+            }
+            total += n_read as u64;
+        }
+        dest.truncate(total as usize);
         Ok(())
     }
 }
