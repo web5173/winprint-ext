@@ -1,7 +1,7 @@
 [package]
 edition = "2021"
 name = "winprint-ext"
-version = "0.2.3"
+version = "0.2.4"
 authors = ["ArcticLampyrid <ArcticLampyrid@outlook.com>"]
 keywords = ["printer", "printing", "xps", "pdf"]
 categories = ["api-bindings", "os::windows-apis"]
@@ -9,6 +9,7 @@ description = "Fork of winprint (Windows printer API) with enhanced image printi
 license = "BSD-3-Clause"
 readme = "README.md"
 documentation = "https://docs.rs/winprint-ext"
+repository = "https://github.com/web5173/winprint-ext"
 
 [features]
 default = ["pdfium"]
